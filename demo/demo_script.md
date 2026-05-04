@@ -72,7 +72,7 @@ Two personas. One data platform. The Category Manager explores a Plotly treemap 
 
 **Action**: Point to scatter plot showing Category: Margin % vs Revenue.
 
-> *"And the detailed table confirms it. Tiger Premium Lager — 22% margin, price index 118 vs competitors. We're 18% more expensive than FairPrice. That's the problem."*
+> *"And the detailed table confirms it — sorted worst-to-best. Look at the bottom: Premium Lager 6pk from Tiger — low margin, price index well above 100 vs competitors. We're significantly more expensive than FairPrice on this SKU. That's the margin leak."*
 
 ---
 
