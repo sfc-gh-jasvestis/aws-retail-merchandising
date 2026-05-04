@@ -46,7 +46,8 @@ Two personas. One data platform. The Category Manager explores a Plotly treemap 
 - [ ] Test treemap: Margins page loads, treemap renders with red/green gradient
 - [ ] Test Cortex Search: Competitive page, search "maximum markup for beverages" — confirm result with "45% above cost"
 - [ ] Open QuickSight: https://us-west-2.quicksight.aws.amazon.com/
-- [ ] Test Amazon Q: ask "Which category has the lowest average margin?"
+- [ ] Clear Amazon Q history: click "+" (New conversation) in Q panel before recording
+- [ ] Test Amazon Q: ask "Which category has the lowest average gross margin?"
 - [ ] Audio: quiet room, external mic
 - [ ] Resolution: 1920x1080
 
@@ -64,15 +65,15 @@ Two personas. One data platform. The Category Manager explores a Plotly treemap 
 
 ### [0:30–1:10] MARGINS PAGE — Plotly Treemap (Show: Streamlit Margins page)
 
-> *"The Category Manager opens the Margins page. This treemap shows every product — size is revenue, color is gross margin percentage. Green is healthy, red is trouble. Immediately I can see Fresh and Beverages are deep red — margins below 21%. Confectionery and Snacks are green — healthy margins above 50%. Let me scroll down."*
+> *"The Category Manager opens the Margins page. This treemap shows every product — size is revenue, color is gross margin percentage. Green is healthy, red is trouble. Immediately I can see Fresh and Beverages are red — margins under 25%. Confectionery and Snacks are green — healthy margins above 50%. Let me scroll down."*
 
 **Action**: Point to Fresh and Beverages sections in treemap. Note the red coloring vs green Confectionery.
 
-> *"Below the treemap, a scatter plot: each dot is a category. Beverages sits bottom-left — lowest margins at 21% and lower revenue. Confectionery is top-right — highest revenue in the portfolio and 55% margins. Fresh is the real concern: 16% margins and the lowest revenue of any category. The Category Manager now knows exactly where to focus."*
+> *"Below the treemap, a scatter plot: each dot is a category. Fresh sits at the far left — only 19% margins. Beverages is next at 25%. Confectionery is on the right — 58% margins with strong revenue. The Category Manager now knows exactly where to focus."*
 
 **Action**: Point to scatter plot showing Category: Margin % vs Revenue.
 
-> *"And the detailed table confirms it — sorted worst-to-best. The bottom rows are all single-digit or low-teen margins with price indexes well above 100 — meaning we're more expensive than competitors on products where we're already losing. That's the margin leak. The Category Manager can now export this list and take action on the worst offenders."*
+> *"And the detailed table confirms it — sorted worst-to-best. The bottom rows are all Fresh and Beverages products with margins in the teens and low twenties. Notice the price index column — values above 100 mean we're more expensive than competitors. Wagyu Beef Strips at 113, Avocado Oil at 55 — these are the margin leaks. The Category Manager can now take action on the worst offenders."*
 
 ---
 
@@ -94,7 +95,7 @@ Two personas. One data platform. The Category Manager explores a Plotly treemap 
 
 **Action**: Type "maximum markup for beverages" in the search box.
 
-> *"Cortex Search finds the policy instantly: maximum markup is 45% above cost for Beverages. Our actual average markup is 26%. We have headroom — but the constraint is clear. The Category Manager now knows the policy boundary before adjusting any prices. Cortex Search just saved a 2-hour policy review."*
+> *"Cortex Search finds the policy instantly: maximum markup is 45% above cost for Beverages. Our actual average markup is 34%. Some room to move — but the constraint is clear. The Category Manager now knows the policy boundary before adjusting any prices. Cortex Search just saved a 2-hour policy review."*
 
 ---
 
@@ -116,9 +117,9 @@ Two personas. One data platform. The Category Manager explores a Plotly treemap 
 
 ### [3:00–3:20] AMAZON Q (Show: QuickSight Q bar)
 
-> *"And the VP's secret weapon — Amazon Q. 'Which promotions had negative ROI last quarter?' Q pulls the data and answers. No SQL. No pivot tables. Just ask."*
+> *"And the VP's secret weapon — Amazon Q. 'Which category has the lowest average gross margin?' Q pulls the data and answers instantly: Fresh at 19.3%, Beverages at 25.4%. The VP glances at the Promotion ROI sheet — BOGO is the weakest performer at $3.2 million. Two insights, two sheets, one conversation. No SQL. No pivot tables. Just ask."*
 
-**Action**: Type the question in the Q bar. Wait for response.
+**Action**: Type "Which category has the lowest average gross margin?" in the Q bar. Wait for response.
 
 ---
 
