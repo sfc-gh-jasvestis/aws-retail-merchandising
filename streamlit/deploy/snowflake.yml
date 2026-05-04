@@ -1,0 +1,16 @@
+definition_version: 2
+
+entities:
+  merchandising_app:
+    type: streamlit
+    identifier:
+      name: MERCHANDISING_PRICING_APP
+      schema: APP
+      database: RETAIL_MERCHANDISING
+    title: "Merchandising & Pricing"
+    comment: "Retail/CPG Demo — Multi-page app with Plotly treemap"
+    query_warehouse: WH_MERCHANDISING
+    main_file: streamlit_app.py
+    stage: RETAIL_MERCHANDISING.APP.STREAMLIT_STAGE
+    artifacts:
+      - streamlit_app.py
