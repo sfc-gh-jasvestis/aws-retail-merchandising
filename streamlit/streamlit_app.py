@@ -109,7 +109,7 @@ elif page == "Competitive":
     st.caption("Price index vs competitors + policy search")
 
     comp_df = session.sql("""
-        SELECT p.CATEGORY, p.BRAND, p.PRODUCT_NAME, p.BASE_PRICE,
+        SELECT p.CATEGORY, p.BRAND, p.NAME AS PRODUCT_NAME, p.BASE_PRICE,
                cp.COMPETITOR, cp.PRICE AS COMPETITOR_PRICE,
                ROUND(p.BASE_PRICE / NULLIF(cp.PRICE, 0) * 100, 1) AS PRICE_INDEX
         FROM RETAIL_MERCHANDISING.RAW.PRODUCTS p
