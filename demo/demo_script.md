@@ -68,7 +68,7 @@ Two personas. One data platform. The Category Manager explores a Plotly treemap 
 
 **Action**: Point to Beverages section in treemap. Note the orange/red coloring.
 
-> *"Below the treemap, a scatter plot: each dot is a category. Beverages is high revenue but low margin — bottom right. Confectionery is the opposite — smaller but 50% margins. The Category Manager now knows exactly where to focus."*
+> *"Below the treemap, a scatter plot: each dot is a category. Beverages sits bottom-left — lowest margins at 21% and lower revenue. Confectionery is top-right — highest revenue in the portfolio and 55% margins. Fresh is the real concern: 16% margins and the lowest revenue of any category. The Category Manager now knows exactly where to focus."*
 
 **Action**: Point to scatter plot showing Category: Margin % vs Revenue.
 

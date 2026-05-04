@@ -7,6 +7,18 @@ from snowflake.snowpark.context import get_active_session
 
 session = get_active_session()
 
+NUMERIC_COLS_MARGIN = ["GROSS_MARGIN_PCT", "TOTAL_REVENUE", "BASE_PRICE", "COST", "PRICE_INDEX_VS_COMPETITOR"]
+NUMERIC_COLS_PROMO = ["DISCOUNT_PCT", "PRODUCTS_IN_PROMO", "PROMO_UNITS_SOLD", "PROMO_REVENUE", "REVENUE_PER_PRODUCT"]
+NUMERIC_COLS_COMP = ["BASE_PRICE", "COMPETITOR_PRICE", "PRICE_INDEX"]
+NUMERIC_COLS_ABC = ["PRODUCT_COUNT", "REVENUE_30D"]
+NUMERIC_COLS_FORECAST = ["FORECAST_REVENUE"]
+
+def ensure_float(df, cols):
+    for col in cols:
+        if col in df.columns:
+            df[col] = pd.to_numeric(df[col].astype(str), errors="coerce")
+    return df
+
 st.set_page_config(page_title="Merchandising & Pricing", layout="wide", page_icon="🏷️")
 
 page = st.sidebar.radio("Navigation", ["Margins", "Promotions", "Competitive", "Assortment"], label_visibility="collapsed")
@@ -36,36 +48,41 @@ if page == "Margins":
         ORDER BY TOTAL_REVENUE DESC
         LIMIT 200
     """).to_pandas()
+    margin_df = ensure_float(margin_df, NUMERIC_COLS_MARGIN)
 
     if not margin_df.empty:
-        positive = margin_df[margin_df["TOTAL_REVENUE"] > 0]
+        positive = margin_df[margin_df["TOTAL_REVENUE"] > 0].copy()
 
         if not positive.empty:
-            positive = positive.copy()
             positive["_hover"] = positive.apply(
                 lambda r: f"<b>{r['PRODUCT_NAME']}</b><br>Brand: {r['BRAND']}<br>Revenue: ${r['TOTAL_REVENUE']:,.0f}<br>Gross Margin: {r['GROSS_MARGIN_PCT']:.1f}%",
                 axis=1
             )
-            fig = px.treemap(
-                positive,
-                path=["CATEGORY", "BRAND", "PRODUCT_NAME"],
-                values="TOTAL_REVENUE",
-                color="GROSS_MARGIN_PCT",
-                color_continuous_scale="RdYlGn",
-                range_color=[0, 80],
-                title="Product Margin Treemap (size=revenue, color=margin%)"
-            )
-            hover_map = dict(zip(positive["PRODUCT_NAME"], positive["_hover"]))
-            texts = []
-            for label, parent in zip(fig.data[0].labels, fig.data[0].parents):
-                if label in hover_map:
-                    texts.append(hover_map[label])
-                else:
-                    texts.append(f"<b>{label}</b>")
-            fig.data[0].hovertext = texts
-            fig.data[0].hoverinfo = "text"
-            fig.update_layout(height=500, margin=dict(t=40, l=10, r=10, b=10))
-            st.plotly_chart(fig, use_container_width=True)
+            try:
+                fig = px.treemap(
+                    positive,
+                    path=["CATEGORY", "BRAND", "PRODUCT_NAME"],
+                    values="TOTAL_REVENUE",
+                    color="GROSS_MARGIN_PCT",
+                    color_continuous_scale="RdYlGn",
+                    color_continuous_midpoint=40,
+                    range_color=[0, 80],
+                    title="Product Margin Treemap (size=revenue, color=margin%)"
+                )
+                hover_map = dict(zip(positive["PRODUCT_NAME"], positive["_hover"]))
+                texts = []
+                for label, parent in zip(fig.data[0].labels, fig.data[0].parents):
+                    if label in hover_map:
+                        texts.append(hover_map[label])
+                    else:
+                        texts.append(f"<b>{label}</b>")
+                fig.data[0].hovertext = texts
+                fig.data[0].hoverinfo = "text"
+                fig.data[0].hovertemplate = None
+                fig.update_layout(height=500, margin=dict(t=40, l=10, r=10, b=10))
+                st.plotly_chart(fig, use_container_width=True)
+            except Exception as e:
+                st.error(f"Treemap error: {e}")
 
         st.divider()
         c1, c2, c3, c4 = st.columns(4)
@@ -77,11 +94,14 @@ if page == "Margins":
         st.divider()
         st.subheader("Margin by Category")
         cat_margin = margin_df.groupby("CATEGORY").agg({"GROSS_MARGIN_PCT": "mean", "TOTAL_REVENUE": "sum"}).reset_index()
-        fig2 = px.scatter(cat_margin, x="GROSS_MARGIN_PCT", y="TOTAL_REVENUE", text="CATEGORY", size="TOTAL_REVENUE",
-                         title="Category: Margin % vs Revenue")
-        fig2.update_traces(textposition="top center")
-        fig2.update_layout(height=400)
-        st.plotly_chart(fig2, use_container_width=True)
+        try:
+            fig2 = px.scatter(cat_margin, x="GROSS_MARGIN_PCT", y="TOTAL_REVENUE", text="CATEGORY", size="TOTAL_REVENUE",
+                             title="Category: Margin % vs Revenue")
+            fig2.update_traces(textposition="top center")
+            fig2.update_layout(height=400)
+            st.plotly_chart(fig2, use_container_width=True)
+        except Exception as e:
+            st.error(f"Scatter chart error: {e}")
 
         st.divider()
         st.subheader("Detailed Product Margins")
@@ -103,19 +123,26 @@ elif page == "Promotions":
         WHERE PROMO_REVENUE > 0
         ORDER BY PROMO_REVENUE DESC LIMIT 50
     """).to_pandas()
+    promo_df = ensure_float(promo_df, NUMERIC_COLS_PROMO)
 
     if not promo_df.empty:
-        fig = px.scatter(promo_df, x="DISCOUNT_PCT", y="PROMO_REVENUE", color="PROMO_TYPE",
-                        size="PROMO_UNITS_SOLD", hover_name="PROMO_NAME",
-                        title="Promotion: Discount % vs Revenue (size = units sold)")
-        fig.update_layout(height=450)
-        st.plotly_chart(fig, use_container_width=True)
+        try:
+            fig = px.scatter(promo_df, x="DISCOUNT_PCT", y="PROMO_REVENUE", color="PROMO_TYPE",
+                            size="PROMO_UNITS_SOLD", hover_name="PROMO_NAME",
+                            title="Promotion: Discount % vs Revenue (size = units sold)")
+            fig.update_layout(height=450)
+            st.plotly_chart(fig, use_container_width=True)
+        except Exception as e:
+            st.error(f"Promotion scatter error: {e}")
 
         st.divider()
         st.subheader("By Promotion Type")
         type_agg = promo_df.groupby("PROMO_TYPE").agg({"PROMO_REVENUE": "sum", "PROMO_UNITS_SOLD": "sum"}).reset_index()
-        fig2 = px.bar(type_agg, x="PROMO_TYPE", y="PROMO_REVENUE", color="PROMO_TYPE", title="Revenue by Promotion Type")
-        st.plotly_chart(fig2, use_container_width=True)
+        try:
+            fig2 = px.bar(type_agg, x="PROMO_TYPE", y="PROMO_REVENUE", color="PROMO_TYPE", title="Revenue by Promotion Type")
+            st.plotly_chart(fig2, use_container_width=True)
+        except Exception as e:
+            st.error(f"Bar chart error: {e}")
 
         st.divider()
         st.subheader("All Promotions")
@@ -139,30 +166,37 @@ elif page == "Competitive":
         ORDER BY PRICE_INDEX DESC
         LIMIT 100
     """).to_pandas()
+    comp_df = ensure_float(comp_df, NUMERIC_COLS_COMP)
 
     if not comp_df.empty:
-        fig = px.bar(comp_df.head(30), x="PRODUCT_NAME", y="PRICE_INDEX", color="COMPETITOR",
-                    title="Price Index vs Competitors (100 = parity, >100 = we're more expensive)",
-                    barmode="group")
-        fig.add_hline(y=100, line_dash="dash", line_color="red", annotation_text="Parity")
-        fig.update_layout(height=450, xaxis_tickangle=-45)
-        st.plotly_chart(fig, use_container_width=True)
+        try:
+            fig = px.bar(comp_df.head(30), x="PRODUCT_NAME", y="PRICE_INDEX", color="COMPETITOR",
+                        title="Price Index vs Competitors (100 = parity, >100 = we're more expensive)",
+                        barmode="group")
+            fig.add_hline(y=100, line_dash="dash", line_color="red", annotation_text="Parity")
+            fig.update_layout(height=450, xaxis_tickangle=-45)
+            st.plotly_chart(fig, use_container_width=True)
+        except Exception as e:
+            st.error(f"Competitive chart error: {e}")
 
     st.divider()
     st.subheader("Pricing Policy Search")
     search_q = st.text_input("Search pricing policies:", placeholder="e.g., maximum markup for beverages")
     if search_q:
-        safe_q = search_q.replace('"', '\\"').replace("'", "''")
-        raw = session.sql(f"""
-            SELECT SNOWFLAKE.CORTEX.SEARCH_PREVIEW(
-                'RETAIL_MERCHANDISING.SEARCH.PRICING_POLICY_SEARCH',
-                '{{"query": "{safe_q}", "columns": ["POLICY_TEXT", "CATEGORY"], "limit": 3}}'
-            ) AS RESULTS
-        """).collect()[0][0]
-        results = json.loads(raw) if isinstance(raw, str) else raw
-        hits = results.get("results", [])
-        for hit in hits:
-            st.info(f"**{hit.get('CATEGORY', '')}**: {hit.get('POLICY_TEXT', '')[:400]}")
+        try:
+            safe_q = search_q.replace('"', '\\"').replace("'", "''")
+            raw = session.sql(f"""
+                SELECT SNOWFLAKE.CORTEX.SEARCH_PREVIEW(
+                    'RETAIL_MERCHANDISING.SEARCH.PRICING_POLICY_SEARCH',
+                    '{{"query": "{safe_q}", "columns": ["POLICY_TEXT", "CATEGORY"], "limit": 3}}'
+                ) AS RESULTS
+            """).collect()[0][0]
+            results = json.loads(raw) if isinstance(raw, str) else raw
+            hits = results.get("results", [])
+            for hit in hits:
+                st.info(f"**{hit.get('CATEGORY', '')}**: {hit.get('POLICY_TEXT', '')[:400]}")
+        except Exception as e:
+            st.error(f"Search error: {e}")
 
 elif page == "Assortment":
     st.title("Assortment Planner")
@@ -173,18 +207,23 @@ elif page == "Assortment":
                COUNT(*)::FLOAT AS PRODUCT_COUNT,
                SUM(REVENUE_30D)::FLOAT AS REVENUE_30D
         FROM RETAIL_MERCHANDISING.CURATED.ASSORTMENT_SCORE
-        {"WHERE CATEGORY IN ('" + cat_clause + "')" if category_filter else ''}
+        WHERE REVENUE_30D > 0
+          {"AND CATEGORY IN ('" + cat_clause + "')" if category_filter else ''}
         GROUP BY STORE_NAME, REGION, ABC_CLASS
         ORDER BY STORE_NAME, ABC_CLASS
     """).to_pandas()
+    abc_df = ensure_float(abc_df, NUMERIC_COLS_ABC)
 
     if not abc_df.empty:
-        fig = px.bar(abc_df, x="STORE_NAME", y="PRODUCT_COUNT", color="ABC_CLASS",
-                    title="Product ABC Classification by Store",
-                    color_discrete_map={"A": "#2ecc71", "B": "#f39c12", "C": "#e74c3c", "D": "#95a5a6"},
-                    barmode="stack")
-        fig.update_layout(height=450, xaxis_tickangle=-45)
-        st.plotly_chart(fig, use_container_width=True)
+        try:
+            fig = px.bar(abc_df, x="STORE_NAME", y="PRODUCT_COUNT", color="ABC_CLASS",
+                        title="Product ABC Classification by Store",
+                        color_discrete_map={"A": "#2ecc71", "B": "#f39c12", "C": "#e74c3c", "D": "#95a5a6"},
+                        barmode="stack")
+            fig.update_layout(height=450, xaxis_tickangle=-45)
+            st.plotly_chart(fig, use_container_width=True)
+        except Exception as e:
+            st.error(f"ABC chart error: {e}")
 
         st.divider()
         c1, c2, c3, c4 = st.columns(4)
@@ -199,15 +238,19 @@ elif page == "Assortment":
 
         st.divider()
         st.subheader("Revenue Forecast by Category")
-        forecast_df = session.sql("""
-            SELECT SERIES AS CATEGORY, TS AS FORECAST_DATE,
-                   FORECAST::FLOAT AS FORECAST_REVENUE
-            FROM RETAIL_MERCHANDISING.ML.CATEGORY_FORECAST_RESULTS
-            ORDER BY SERIES, TS
-        """).to_pandas()
-        forecast_df["CATEGORY"] = forecast_df["CATEGORY"].str.strip('"')
-        if not forecast_df.empty:
-            fig2 = px.line(forecast_df, x="FORECAST_DATE", y="FORECAST_REVENUE", color="CATEGORY",
-                          title="14-Day Revenue Forecast by Category")
-            fig2.update_layout(height=400)
-            st.plotly_chart(fig2, use_container_width=True)
+        try:
+            forecast_df = session.sql("""
+                SELECT SERIES AS CATEGORY, TS AS FORECAST_DATE,
+                       FORECAST::FLOAT AS FORECAST_REVENUE
+                FROM RETAIL_MERCHANDISING.ML.CATEGORY_FORECAST_RESULTS
+                ORDER BY SERIES, TS
+            """).to_pandas()
+            forecast_df = ensure_float(forecast_df, NUMERIC_COLS_FORECAST)
+            forecast_df["CATEGORY"] = forecast_df["CATEGORY"].astype(str).str.strip('"')
+            if not forecast_df.empty:
+                fig2 = px.line(forecast_df, x="FORECAST_DATE", y="FORECAST_REVENUE", color="CATEGORY",
+                              title="14-Day Revenue Forecast by Category")
+                fig2.update_layout(height=400)
+                st.plotly_chart(fig2, use_container_width=True)
+        except Exception as e:
+            st.error(f"Forecast chart error: {e}")
