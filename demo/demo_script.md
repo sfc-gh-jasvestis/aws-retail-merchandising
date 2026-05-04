@@ -64,9 +64,9 @@ Two personas. One data platform. The Category Manager explores a Plotly treemap 
 
 ### [0:30–1:10] MARGINS PAGE — Plotly Treemap (Show: Streamlit Margins page)
 
-> *"The Category Manager opens the Margins page. This treemap shows every product — size is revenue, color is gross margin percentage. Green is healthy, red is trouble. Immediately I can see Beverages is a large category but trending orange — margins are compressing across the board. Let me click in."*
+> *"The Category Manager opens the Margins page. This treemap shows every product — size is revenue, color is gross margin percentage. Green is healthy, red is trouble. Immediately I can see Fresh and Beverages are deep red — margins below 21%. Confectionery and Snacks are green — healthy margins above 50%. Let me scroll down."*
 
-**Action**: Point to Beverages section in treemap. Note the orange/red coloring.
+**Action**: Point to Fresh and Beverages sections in treemap. Note the red coloring vs green Confectionery.
 
 > *"Below the treemap, a scatter plot: each dot is a category. Beverages sits bottom-left — lowest margins at 21% and lower revenue. Confectionery is top-right — highest revenue in the portfolio and 55% margins. Fresh is the real concern: 16% margins and the lowest revenue of any category. The Category Manager now knows exactly where to focus."*
 
@@ -88,21 +88,21 @@ Two personas. One data platform. The Category Manager explores a Plotly treemap 
 
 ### [1:40–2:10] COMPETITIVE PAGE — Price Index + Policy Search (Show: Streamlit Competitive page)
 
-> *"The competitive radar. Everything above the red line means we're more expensive than competitors. FairPrice undercut us on 8 Beverage products last week — by up to 15%. That's the direct cause of our margin pressure: we haven't adjusted, and volume is shifting to competitors.*
+> *"The competitive radar. Everything above the red line means we're more expensive than competitors. We're priced above parity on dozens of products — some by nearly 3x. That's a risk: competitors are offering the same products for less, and volume could shift.*
 >
 > *But can we adjust? Let me search the pricing policy."*
 
 **Action**: Type "maximum markup for beverages" in the search box.
 
-> *"Cortex Search finds the policy instantly: maximum markup is 45% above cost. We're at 42%. Only 3 points of room. The Category Manager now knows: reprice the 8 undercut SKUs to match FairPrice, absorb the 3% margin hit, and recover volume. Cortex Search just saved a 2-hour policy review."*
+> *"Cortex Search finds the policy instantly: maximum markup is 45% above cost for Beverages. Our actual average markup is 26%. We have headroom — but the constraint is clear. The Category Manager now knows the policy boundary before adjusting any prices. Cortex Search just saved a 2-hour policy review."*
 
 ---
 
 ### [2:10–2:30] ASSORTMENT PAGE — ABC + Forecast (Show: Streamlit Assortment page)
 
-> *"Assortment planning. Every product classified A through D by store. 60% of revenue comes from 15% of products — the A class. These D-class items at the bottom haven't sold a single unit in 30 days. Candidates for delisting.*
+> *"Assortment planning. Every product with sales in the last 30 days, classified A through C by store. A-class products are the stars — highest revenue per store. C-class is the long tail. The Category Manager can spot which stores have a thin A-class and need assortment changes.*
 >
-> *And the 14-day revenue forecast by category — Snowflake ML, no Python, no SageMaker. Beverages are predicted flat, but Confectionery is trending up 8%. Shift shelf space accordingly."*
+> *And the 14-day revenue forecast by category — Snowflake ML, no Python, no SageMaker. Beverages are predicted flat, but Dairy is trending up 9% and Fresh up 14%. Shift shelf space accordingly."*
 
 ---
 
@@ -124,7 +124,7 @@ Two personas. One data platform. The Category Manager explores a Plotly treemap 
 
 ### [3:20–3:30] CLOSE
 
-> *"One platform. Two personas. The Category Manager knows which 8 SKUs to reprice and which D-class products to delist. The VP knows BOGO is destroying margin. No data copies, no Excel exports, no waiting for the analyst. Snowflake for the foundation. Amazon Q for the conversation. Merchandising intelligence at scale."*
+> *"One platform. Two personas. The Category Manager knows which overpriced SKUs to adjust and which tail products to review. The VP knows BOGO is destroying margin. No data copies, no Excel exports, no waiting for the analyst. Snowflake for the foundation. Amazon Q for the conversation. Merchandising intelligence at scale."*
 
 ---
 
@@ -137,7 +137,7 @@ Two personas. One data platform. The Category Manager explores a Plotly treemap 
    → Yes. Snowpipe for real-time, S3 for batch, Kafka connector for streaming POS data. Same Dynamic Table pipeline handles all.
 
 3. **"How do you handle private label vs branded pricing differently?"**
-   → Pricing policies in Cortex Search are category-specific. Policy POL-006 explicitly states "private label must be priced 20-30% below branded equivalent."
+   → Pricing policies in Cortex Search are category-specific. Policy POL-005 explicitly states "private label must be priced 20-30% below branded equivalent."
 
 4. **"What about seasonal pricing?"**
    → ML FORECAST captures seasonal patterns automatically. Category Manager can see predicted spikes and adjust assortment in advance.
