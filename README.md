@@ -13,24 +13,16 @@
 
 ## Architecture
 
-```
-S3 (competitor price feeds) ──► External Stage ──► RAW.COMPETITOR_PRICES
-RAW (products, stores, sales, promotions, pricing_policies)
-         │
-         ▼
-Dynamic Tables (5 min):
-├── PRODUCT_MARGIN_ANALYSIS (margin + competitor price index)
-├── PROMOTION_EFFECTIVENESS (lift, revenue per product)
-└── ASSORTMENT_SCORE (ABC classification per store)
-         │
-    ┌────┴────┐
-    ▼         ▼
-ML FORECAST   Cortex Search
-(14d revenue) (pricing policies)
-    │
-    ▼
-Streamlit (4 pages) ──► QuickSight + Amazon Q
-(Category Manager)       (VP Merchandising)
+A merchandising and pricing analytics platform built on **Snowflake** (Dynamic Tables, ML.FORECAST, Cortex Search, semantic view, Cortex Analyst) and **AWS** (S3, QuickSight + Amazon Q). Competitor price feeds land in S3; Snowflake builds the curated layer with margin, promotion, and assortment scores; the VP asks Amazon Q "Which promotions had negative ROI?"
+
+```mermaid
+flowchart LR
+    S3[S3 competitor price feeds] --> SF[Snowflake Dynamic Tables PRODUCT_MARGIN / PROMOTION_EFFECTIVENESS / ASSORTMENT_SCORE]
+    SF --> ML[ML.FORECAST 14d revenue]
+    SF --> CSearch[Cortex Search pricing policies]
+    SF --> SemView[Semantic View]
+    SF --> ST[Streamlit Merchandising 4 pages]
+    SF --> QS[QuickSight + Amazon Q]
 ```
 
 ## Data
