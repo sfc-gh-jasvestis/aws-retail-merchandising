@@ -16,6 +16,25 @@ flowchart LR
     SF --> QS[QuickSight + Amazon Q]
 ```
 
+## Snowflake Capabilities
+
+| Capability | Implementation |
+|-----------|---------------|
+| Dynamic Tables | PRODUCT_MARGIN / PROMOTION_EFFECTIVENESS / ASSORTMENT_SCORE |
+| ML Functions | ML.FORECAST 14-day category revenue predictions |
+| Cortex Search | 50 category-specific pricing policies indexed |
+| Cortex Agent | MerchandisingAnalyst + PricingPolicySearch tools |
+| Semantic View | Structured analytics over margins, promotions, assortment |
+| Streamlit | 4-page dashboard: Margins / Promotions / Competitive / Assortment |
+
+## AWS Services
+
+| Service | Role in Demo |
+|---------|-------------|
+| Amazon S3 | Competitor price feed ingestion |
+| Amazon QuickSight | Executive merchandising and pricing dashboard |
+| Amazon Q | Natural language analytics for VP Merchandising |
+
 ## Personas
 
 | Persona | Role | Key Questions |
