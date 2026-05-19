@@ -95,6 +95,8 @@ Industry research and Snowflake customer outcomes:
 - **Tapestry** (Coach, Kate Spade -- Snowflake customer): identified optimal markdown strategies, doubling data sources at lower cost -- snowflake.com/customers
 - **Competitive price intelligence** reduces price gaps by 5-15% vs market -- Retailer benchmarks
 
+- **Tapestry** doubled data sources at lower cost, processing 4B+ rows daily on Snowflake -- snowflake.com/customers
+
 ## Key Demo Numbers
 
 - **1,000 SKUs** with real-time margin tracking across 50 stores
