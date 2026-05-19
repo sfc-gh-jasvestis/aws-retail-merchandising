@@ -87,6 +87,14 @@ Run the SQL scripts in `snowflake/` (skip `01_integrations.sql`) and deploy the 
 ### Full AWS + Snowflake
 Run all SQL scripts including `01_integrations.sql`, deploy the main Streamlit app from `streamlit/`, then run the QuickSight setup from `quicksight/`.
 
+## Business Impact
+
+Industry research and Snowflake customer outcomes:
+- **AI pricing optimization** improves gross margins by 3-8% -- McKinsey Pricing
+- **Promotion ROI visibility** increases marketing spend efficiency 20-30% -- Industry benchmark
+- **Tapestry** (Coach, Kate Spade -- Snowflake customer): identified optimal markdown strategies, doubling data sources at lower cost -- snowflake.com/customers
+- **Competitive price intelligence** reduces price gaps by 5-15% vs market -- Retailer benchmarks
+
 ## Key Demo Numbers
 
 - **1,000 SKUs** with real-time margin tracking across 50 stores
@@ -96,4 +104,6 @@ Run all SQL scripts including `01_integrations.sql`, deploy the main Streamlit a
 
 ## License
 
-Apache 2.0 — See [LICENSE](LICENSE) for details. This is a personal project and is not an official Snowflake offering. It comes with no support or warranty. Use it at your own risk. Snowflake has no obligation to maintain, update, or support this code. Do not use this code in production without thorough review and testing.
+Apache 2.0 — See [LICENSE](LICENSE) for details.
+
+This is a personal demo project and is not an official Snowflake offering. It comes with no support or warranty. Industry metrics cited are from publicly available third-party research and Snowflake customer stories; they represent reported outcomes and are not guarantees of results.
