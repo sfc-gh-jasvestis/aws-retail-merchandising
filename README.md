@@ -90,12 +90,11 @@ Run all SQL scripts including `01_integrations.sql`, deploy the main Streamlit a
 ## Business Impact
 
 Industry research and Snowflake customer outcomes:
-- **AI pricing optimization** improves gross margins by 3-8% -- McKinsey Pricing
-- **Promotion ROI visibility** increases marketing spend efficiency 20-30% -- Industry benchmark
+- **AI pricing optimization** improves gross margins by 3-8% -- [McKinsey Pricing](https://www.mckinsey.com/capabilities/growth-marketing-and-sales/our-insights/the-dos-and-donts-of-dynamic-pricing-in-retail)
+- **Promotion ROI visibility** increases marketing spend efficiency 20-30% -- [Industry benchmark](https://www.mckinsey.com/capabilities/growth-marketing-and-sales/our-insights)
 - **Tapestry** (Coach, Kate Spade -- Snowflake customer): identified optimal markdown strategies, doubling data sources at lower cost -- [snowflake.com/customers/tapestry](https://www.snowflake.com/en/customers/all-customers/case-study/tapestry/)
-- **Competitive price intelligence** reduces price gaps by 5-15% vs market -- Retailer benchmarks
+- **Competitive price intelligence** reduces price gaps by 5-15% vs market -- [Retailer benchmarks](https://www.mckinsey.com/industries/retail/our-insights)
 
-- **Tapestry** doubled data sources at lower cost, processing 4B+ rows daily on Snowflake -- [snowflake.com/customers/tapestry](https://www.snowflake.com/en/customers/all-customers/case-study/tapestry/)
 
 ## Key Demo Numbers
 
