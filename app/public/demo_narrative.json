@@ -1,0 +1,142 @@
+{
+  "title": "Singapore Retail Merchandising and Pricing",
+  "duration": "6 minutes",
+  "thesis": "On one governed platform, Snowflake turns daily merchandise line activity from Tembusu Fresh Mart, a fictional Singapore supermarket chain, into price integrity KPIs, 7-day unplanned-markdown risk per line, markdown depth anomalies and AI answers that cite their sources.",
+  "tabs": [
+    {
+      "id": "executive-cockpit",
+      "persona": {
+        "name": "Farah Aziz",
+        "role": "Head of Pricing and Promotions (fictional)",
+        "avatar": ""
+      },
+      "talking_points": [
+        "48 merchandise lines are ranged in the store clusters of five HDB towns: Bukit Batok, Sengkang, Toa Payoh, Bedok and Yishun. The cards show price integrity rate, pricing exceptions, unplanned markdowns and net sales in SGD.",
+        "Each KPI is computed as a numerator over a denominator in a curated dynamic table, so you can trace it to line-day rows.",
+        "The exception-type chart separates exceptions that end in an unplanned markdown from ones that always get resolved, such as the town-wide competitor price campaigns in Sengkang and Yishun, answered with a price match."
+      ],
+      "show": [
+        "KPI cards",
+        "Daily pricing exceptions",
+        "Pricing exceptions by type",
+        "Merchandise line table"
+      ],
+      "call_out": "Merchandising KPIs you can trace to source rows",
+      "transition": {
+        "next_tab": "predictive",
+        "line": "Which lines need a pricing review first?"
+      }
+    },
+    {
+      "id": "predictive",
+      "persona": {
+        "name": "Daniel Koh",
+        "role": "Category Pricing Analyst (fictional)",
+        "avatar": ""
+      },
+      "talking_points": [
+        "A Snowflake ML classifier estimates, per merchandise line, the chance of an unplanned markdown in the next 7 days.",
+        "Precision and recall come from the latest 14 days held out of training, shown next to the base rate.",
+        "Anomaly detection picks out unusual markdown depth, and the forecast covers the next 14 days of pricing exceptions."
+      ],
+      "show": [
+        "Holdout metrics",
+        "Risk by line",
+        "Pricing-exception forecast",
+        "Markdown depth anomalies"
+      ],
+      "call_out": "ML that is evaluated honestly, next to the data",
+      "transition": {
+        "next_tab": "planning",
+        "line": "Are price audits and supplier funding agreements up to date?"
+      }
+    },
+    {
+      "id": "planning",
+      "persona": {
+        "name": "Farah Aziz",
+        "role": "Head of Pricing and Promotions (fictional)",
+        "avatar": ""
+      },
+      "talking_points": [
+        "Price audit compliance, supplier funding agreement coverage and pending agreements show where pricing controls are slipping.",
+        "Plotting price audit compliance against unplanned markdowns per line shows where the two move together; it is an association in synthetic data, not proof of cause.",
+        "The action memo is drafted only from KPI, line, exception-type and risk rows, and a person reviews it before anything is sent."
+      ],
+      "show": [
+        "Control KPIs",
+        "Price audit compliance vs unplanned markdowns",
+        "Action memo"
+      ],
+      "call_out": "Controls and a reviewed memo, from the same data",
+      "transition": {
+        "next_tab": "live",
+        "line": "What is happening at the registers right now?"
+      }
+    },
+    {
+      "id": "live",
+      "persona": {
+        "name": "Daniel Koh",
+        "role": "Category Pricing Analyst (fictional)",
+        "avatar": ""
+      },
+      "talking_points": [
+        "New POS events arrive in RAW.LIVE_POS, either from the simulator or from Amazon Data Firehose through Snowpipe.",
+        "The alert records each EXCEPTION event with an SOP hint and the line's risk band, then emails the on-call pricing analyst, so a mismatch at a heartland outlet becomes a pricing case the same day."
+      ],
+      "show": [
+        "Events loaded and lag",
+        "Latest POS events",
+        "Alert log"
+      ],
+      "call_out": "From a live pricing exception to a pricing case on one platform",
+      "transition": {
+        "next_tab": "ask-ai",
+        "line": "Let's ask the data directly."
+      }
+    },
+    {
+      "id": "ask-ai",
+      "persona": {
+        "name": "Farah Aziz",
+        "role": "Head of Pricing and Promotions (fictional)",
+        "avatar": ""
+      },
+      "talking_points": [
+        "The Cortex Agent answers metric questions with Cortex Analyst over the semantic view, and procedure questions with Cortex Search over 14 synthetic SOPs.",
+        "Every answer shows the SQL it generated and the SOP IDs it cited."
+      ],
+      "show": [
+        "Ask a sample question",
+        "Generated SQL",
+        "SOP citations"
+      ],
+      "call_out": "Answers in plain language that you can check",
+      "transition": {
+        "next_tab": "architecture",
+        "line": "This is how it fits together."
+      }
+    },
+    {
+      "id": "architecture",
+      "persona": {
+        "name": "Farah Aziz",
+        "role": "Head of Pricing and Promotions (fictional)",
+        "avatar": ""
+      },
+      "talking_points": [
+        "One core supports two builds: Snowflake only, or AWS + Snowflake with Data Firehose, Bedrock, QuickSight and Amazon Q.",
+        "All data shown is synthetic and rebuilds the same way from the repo."
+      ],
+      "show": [
+        "Both architecture diagrams"
+      ],
+      "call_out": "A governed core with an optional AWS edge",
+      "transition": {
+        "next_tab": "",
+        "line": "Questions?"
+      }
+    }
+  ]
+}

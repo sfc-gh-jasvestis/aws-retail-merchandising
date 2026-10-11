@@ -1,0 +1,81 @@
+{
+  "version": 1,
+  "repo": "aws-singapore-retail-merchandising",
+  "operation": "on-demand",
+  "data_classification": "synthetic demonstration only",
+  "currency": "SGD",
+  "grains": {
+    "RAW.MERCH_LINES": "one row per merchandise line (Singapore planning area and product category)",
+    "RAW.LINE_DAILY": "one row per line per day (90 days)",
+    "RAW.FUNDING_AGREEMENTS": "one row per line (supplier funding agreement snapshot)",
+    "CURATED.PERFORMANCE_SUMMARY": "one row per line",
+    "CURATED.TREND_ANALYSIS": "one row per day",
+    "CURATED.EXCEPTION_SUMMARY": "one row per pricing exception type",
+    "CURATED.KPI_SUMMARY": "one row per KPI",
+    "ML.MARKDOWN_RISK_SCORES": "one row per line (latest day)"
+  },
+  "metrics": {
+    "Price Integrity Rate": "100 * (SUM(UNITS_SOLD) - SUM(EXCEPTION_COUNT)) / SUM(UNITS_SOLD)",
+    "Pricing Exceptions Raised": "SUM(EXCEPTION_COUNT)",
+    "Unplanned Markdowns": "SUM(MARKDOWN_COUNT)",
+    "Exception Markdown Rate": "100 * SUM(MARKDOWN_COUNT) / SUM(EXCEPTION_COUNT)",
+    "Promo Setup Delays": "SUM(PROMO_DELAY)",
+    "Net Sales (SGD K)": "SUM(NET_SALES_SGD) / 1e3",
+    "Units Sold": "SUM(UNITS_SOLD)",
+    "Price Audit Compliance": "100 * SUM(PRICE_AUDIT_DONE) / SUM(PRICE_AUDIT_DUE)",
+    "Merchandise Lines Monitored": "COUNT(RAW.MERCH_LINES)",
+    "Funding Agreement Coverage": "100 * SUM(LEAST(ON_FILE_QTY, REQUIRED_QTY)) / SUM(REQUIRED_QTY)",
+    "Funding Agreements Pending": "SUM(PENDING_QTY)"
+  },
+  "chart_bindings": {
+    "daily_pricing_exceptions": [
+      "CURATED.TREND_ANALYSIS.METRIC_DATE",
+      "EXCEPTION_COUNT",
+      "MARKDOWN_COUNT"
+    ],
+    "exceptions_by_type": [
+      "CURATED.EXCEPTION_SUMMARY.EXCEPTION_TYPE",
+      "EXCEPTION_COUNT",
+      "MARKDOWN_COUNT"
+    ],
+    "price_audit_vs_markdowns": [
+      "CURATED.PERFORMANCE_SUMMARY.PRICE_AUDIT_PCT",
+      "MARKDOWN_COUNT"
+    ],
+    "quicksight_markdown_risk": [
+      "ENTITY_ID",
+      "MAX(MARKDOWN_PROB_7D)"
+    ]
+  },
+  "freshness": "MAX(EVENT_DATE) is an observation watermark; requestedAt is not freshness",
+  "required_capabilities": {
+    "core_pipeline": "Curated KPIs reconcile to a RAW recomputation (run_core.py checks this on every build)",
+    "forecast_and_anomaly": "14-day network-wide pricing-exception FORECAST; markdown depth ANOMALY_DETECTION (train 75 days, detect last 15)",
+    "search": "Cortex Search SEARCH.EXCEPTION_SOP_SEARCH over synthetic pricing exception handling SOPs (one per product category and exception type)",
+    "semantic_analytics": "Semantic view APP.MERCHANDISING_ANALYTICS and Cortex Agent APP.MERCHANDISING_AGENT using analyst + search tools",
+    "grounded_ai": "Agent answers return generated SQL and SOP citations; the action memo uses only KPI, merchandise line, exception-type and risk rows",
+    "quicksight": "DIRECT_QUERY dashboard (merchandise lines, daily pricing exceptions, unplanned markdowns by line, unplanned-markdown risk, POS events loaded) through a read-only Snowflake service user",
+    "quicksight_q": "Amazon Q topic over the curated datasets for natural-language questions",
+    "aws_ingestion": "Amazon Data Firehose -> S3 -> Snowpipe AUTO_INGEST into RAW.LIVE_POS",
+    "notifications": "APP.LIVE_POS_ALERT logs new EXCEPTION events to APP.ALERT_LOG and emails via SYSTEM$SEND_EMAIL; alert and tasks suspended between demos",
+    "orchestration": "Task graph APP.TASK_REFRESH_CURATED -> APP.TASK_RESCORE_RISK run on demand (EXECUTE TASK)",
+    "app_deployment": "SPCS service APP.SG_RETAIL_MERCHANDISING_APP; routes /api/data, /api/ask, /api/agent",
+    "markdown_risk_model": "Snowflake ML CLASSIFICATION of P(unplanned markdown for the line in the next 7 days), evaluated on an out-of-time holdout"
+  },
+  "builds": {
+    "snowflake": {
+      "database": "SINGAPORE_RETAIL_MERCHANDISING_SNOWFLAKE",
+      "app_setting": "DEMO_PLATFORM=snowflake",
+      "memo": "Cortex AI_COMPLETE (claude-sonnet-4-5)",
+      "live_pos": "APP.SIMULATE_POS(n)"
+    },
+    "aws": {
+      "database": "SINGAPORE_RETAIL_MERCHANDISING_AWS",
+      "app_setting": "DEMO_PLATFORM=aws",
+      "memo": "Amazon Bedrock Claude Sonnet 4.5 via APP.BEDROCK_GENERATE",
+      "capabilities": "see required_capabilities",
+      "live_pos": "Amazon Data Firehose -> S3 -> Snowpipe"
+    }
+  },
+  "scope": "Tembusu Fresh Mart, a fictional Singapore supermarket chain; 48 merchandise lines in five Singapore planning areas (Bukit Batok, Sengkang, Toa Payoh, Bedok, Yishun); synthetic data in SGD"
+}
